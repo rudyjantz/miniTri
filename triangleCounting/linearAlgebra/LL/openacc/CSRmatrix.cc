@@ -156,7 +156,7 @@ void CSRMat::matmat(const CSRMat &A, const CSRMat &B)
     vals = new int*[m];
     
 
-#pragma omp parallel for schedule(static,CHUNK) 
+#pragma acc kernels
     for(int i=0;i<m;i++)
     {
       cols[i]=0;
@@ -173,13 +173,16 @@ void CSRMat::matmat(const CSRMat &A, const CSRMat &B)
   nnz =0;
 
   int tmpNNZ =0;
-#pragma omp parallel for schedule(static,CHUNK), reduction (+:tmpNNZ)
+//#pragma acc routine seq
+extern void *memset(void *, int, size_t);
+#pragma acc routine(memset) seq
+#pragma acc kernels
   for (int rownum=0; rownum<m; rownum++)
   {
     nnzInRow[rownum]=0;
     std::map<int,int> newNZs;
 
-    int nnzInRowA = A.getNNZInRow(rownum);
+    /*int nnzInRowA = A.getNNZInRow(rownum);
 
     for(int nzindxA=0; nzindxA<nnzInRowA; nzindxA++)
     {
@@ -231,7 +234,7 @@ void CSRMat::matmat(const CSRMat &A, const CSRMat &B)
     /////////////////////////////////////////
 
     //MMW: not thread safe, needs reworking
-    //nnz += nnzInRow[rownum];  
+    //nnz += nnzInRow[rownum];  */
     tmpNNZ += nnzInRow[rownum]; 
 
 
