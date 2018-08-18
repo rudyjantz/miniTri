@@ -11,7 +11,7 @@
 UTILDIRS = ../../../utils/
 INCDIRS = -I. -I$(UTILDIRS)
 CCC = pgc++
-CCFLAGS = -O3 -DNDEBUG -std=c++11
+CCFLAGS = -O3 -DNDEBUG -std=c++11 -acc -ta=nvidia -Minfo=accel
 LIBPATH = -L. 
 
 
