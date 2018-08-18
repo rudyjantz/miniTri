@@ -1,4 +1,4 @@
 *.o
 *.a
 *.exe
-input
+input/*.mtx
