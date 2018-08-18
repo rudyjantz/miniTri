@@ -10,8 +10,8 @@
 ##############################################################################
 UTILDIRS = ../../../utils/
 INCDIRS = -I. -I$(UTILDIRS)
-CCC = g++ 
-CCFLAGS = -O3 -Wall -DNDEBUG -fopenmp -std=c++11
+CCC = pgc++
+CCFLAGS = -O3 -DNDEBUG -std=c++11
 LIBPATH = -L. 
 
 
@@ -51,4 +51,4 @@ triCount	:	lib CSRMatrix.h Graph.h
 	$(CCC) $(INCDIRS) $(LIBPATH) $(CCFLAGS) -o triCount.exe triCount.cc -lSPLA 
 
 clean	:
-	rm -f *.o *~ libSPLA.a *.out miniTri.exe
+	rm -f *.o *~ libSPLA.a *.out triCount.exe
