@@ -10,8 +10,8 @@
 ##############################################################################
 UTILDIR = ../../utils/
 INCDIRS = -I. -I$(UTILDIR)
-CCC = g++ 
-CCFLAGS = -O3 -Wall -DNDEBUG -fopenmp
+CCC = pgc++
+CCFLAGS = -O3 -DNDEBUG -Minfo=accel -acc -ta=nvidia
 LIBPATH = -L. 
 
 

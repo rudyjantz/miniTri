@@ -173,7 +173,7 @@ void CSRMat::matmat(const CSRMat &A, const CSRMat &B)
     vals = new std::list<int>*[m];
     
 
-#pragma omp parallel for schedule(static,CHUNK) 
+#pragma acc parallel loop
     for(int i=0;i<m;i++)
     {
       cols[i]=0;
@@ -190,7 +190,7 @@ void CSRMat::matmat(const CSRMat &A, const CSRMat &B)
   nnz =0;
 
   int tmpNNZ =0;
-#pragma omp parallel for schedule(static,CHUNK), reduction (+:tmpNNZ)
+//#pragma omp parallel for schedule(static,CHUNK), reduction (+:tmpNNZ)
   for (int rownum=0; rownum<m; rownum++)
   {
     nnzInRow[rownum]=0;
