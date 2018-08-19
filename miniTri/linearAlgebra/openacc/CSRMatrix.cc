@@ -145,7 +145,7 @@ void CSRMat::SpMV1(bool trans, Vector &y)
     {
       yloc.resize(y.getSize());
 
-      //#pragma omp for schedule(dynamic,mBlockSize)
+      #pragma acc loop parallel
       for (int rowID=0; rowID<m; rowID++)
       {
         int NNZinRow = nnzInRow[rowID];
@@ -158,7 +158,7 @@ void CSRMat::SpMV1(bool trans, Vector &y)
       } // end loop over rows
 
       // Atomics might be a more efficient way to go
-      //#pragma omp critical
+      #pragma acc loop parallel
       {
         for(int j=0;j<yloc.getSize();j++)
 	{
@@ -665,6 +665,7 @@ void CSRMat::computeKCounts(const Vector &vTriDegrees,const Vector &eTriDegrees,
   localK.resize(kCounts.size());
 
   //#pragma omp for schedule(dynamic,mBlockSize)
+  #pragma acc loop parallel
   for (int rownum=0; rownum<m; rownum++)
   {
     for(int nzIdx=0; nzIdx<nnzInRow[rownum]; nzIdx++)
@@ -728,6 +729,7 @@ void CSRMat::computeKCounts(const Vector &vTriDegrees,const Vector &eTriDegrees,
   ///////////////////////////////////////////////////////////////////////////                                                                 
 
   //#pragma omp critical
+  #pragma acc loop parallel
   {
     for(unsigned int j=0;j<localK.size();j++) 
     {
