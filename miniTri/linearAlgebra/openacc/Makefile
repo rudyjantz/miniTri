@@ -10,8 +10,9 @@
 ##############################################################################
 UTILDIRS = ../../utils/
 INCDIRS = -I. -I$(UTILDIRS)
-CCC = g++ 
-CCFLAGS = -O3 -Wall -DNDEBUG -fopenmp -std=c++11 
+CCC = pgc++
+# Will crash if NDEBUG not defined
+CCFLAGS = -O3 -DNDEBUG -std=c++11 -acc -ta=nvidia -Minfo=accel
 LIBPATH = -L. 
 
 

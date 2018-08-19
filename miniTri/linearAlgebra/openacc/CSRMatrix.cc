@@ -132,7 +132,7 @@ void CSRMat::SpMV1(bool trans, Vector &y)
 
   if(trans==false)
   {
-    #pragma omp parallel for schedule(dynamic,mBlockSize) shared(y)
+    #pragma acc loop parallel
     for (int rowID=0; rowID<m; rowID++)
     {
       y.setVal(rowID,nnzInRow[rowID]);
@@ -141,11 +141,11 @@ void CSRMat::SpMV1(bool trans, Vector &y)
   else
   {
     Vector yloc;
-    #pragma omp parallel private(yloc) default(shared)
+    //#pragma omp parallel private(yloc) default(shared)
     {
       yloc.resize(y.getSize());
 
-      #pragma omp for schedule(dynamic,mBlockSize) 
+      //#pragma omp for schedule(dynamic,mBlockSize)
       for (int rowID=0; rowID<m; rowID++)
       {
         int NNZinRow = nnzInRow[rowID];
@@ -158,7 +158,7 @@ void CSRMat::SpMV1(bool trans, Vector &y)
       } // end loop over rows
 
       // Atomics might be a more efficient way to go
-      #pragma omp critical
+      //#pragma omp critical
       {
         for(int j=0;j<yloc.getSize();j++)
 	{
@@ -201,7 +201,7 @@ void CSRMat::matmat(const CSRMat &A, const CSRMat &B)
   nnz =0;
 
   int tmpNNZ =0;
-  #pragma omp parallel for schedule(dynamic,mBlockSize), reduction (+:tmpNNZ)
+  //#pragma omp parallel for schedule(dynamic,mBlockSize), reduction (+:tmpNNZ)
   for (int rownum=0; rownum<m; rownum++)
   {
     nnzInRow[rownum]=0;
@@ -659,13 +659,12 @@ void CSRMat::computeKCounts(const Vector &vTriDegrees,const Vector &eTriDegrees,
 
   std::vector<int> localK;
 
-  //#pragma omp parallel private(localK) shared(kCounts)
-#pragma omp parallel private(localK) default(shared)
-{
+//#pragma omp parallel private(localK) default(shared)
+ {
 
   localK.resize(kCounts.size());
 
-#pragma omp for schedule(dynamic,mBlockSize) 
+  //#pragma omp for schedule(dynamic,mBlockSize)
   for (int rownum=0; rownum<m; rownum++)
   {
     for(int nzIdx=0; nzIdx<nnzInRow[rownum]; nzIdx++)
@@ -728,7 +727,7 @@ void CSRMat::computeKCounts(const Vector &vTriDegrees,const Vector &eTriDegrees,
   } // end loop over rows                                 
   ///////////////////////////////////////////////////////////////////////////                                                                 
 
-#pragma omp critical
+  //#pragma omp critical
   {
     for(unsigned int j=0;j<localK.size();j++) 
     {
